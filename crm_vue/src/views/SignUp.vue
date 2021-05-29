@@ -89,6 +89,8 @@ export default {
       }
 
       if (!this.errors.length) {
+        this.$store.commit('setIsLoading', true)
+
         const formData = {
           username: this.username,
           password: this.password1,
@@ -119,6 +121,8 @@ export default {
               this.errors.push('Something went wrong. Please try again!')
             }
           })
+
+        this.$store.commit('setIsLoading', false)
       }
     },
   },
