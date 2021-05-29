@@ -41,7 +41,7 @@ const routes = [
     }
   },
   {
-    path: '/my-account',
+    path: '/dashboard/my-account',
     name: 'MyAccount',
     component: MyAccount,
     meta: {
