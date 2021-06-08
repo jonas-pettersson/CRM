@@ -2,7 +2,7 @@
   <div class="container">
     <div class="columns is-multiline">
       <div class="column is-12">
-        <h1 class="title">Add lead</h1>
+        <h1 class="title">Edit {{ lead.company }}</h1>
       </div>
 
       <div class="column is-12">
@@ -15,7 +15,7 @@
                 name="company"
                 id="company"
                 class="input"
-                v-model="company"
+                v-model="lead.company"
               />
             </div>
           </div>
@@ -27,7 +27,7 @@
                 name="contact_person"
                 id="contact_person"
                 class="input"
-                v-model="contact_person"
+                v-model="lead.contact_person"
               />
             </div>
           </div>
@@ -39,7 +39,7 @@
                 name="email"
                 id="email"
                 class="input"
-                v-model="email"
+                v-model="lead.email"
               />
             </div>
           </div>
@@ -51,7 +51,7 @@
                 name="phone"
                 id="phone"
                 class="input"
-                v-model="phone"
+                v-model="lead.phone"
               />
             </div>
           </div>
@@ -63,7 +63,7 @@
                 name="website"
                 id="website"
                 class="input"
-                v-model="website"
+                v-model="lead.website"
               />
             </div>
           </div>
@@ -75,7 +75,7 @@
                 name="confidence"
                 id="confidence"
                 class="input"
-                v-model="confidence"
+                v-model="lead.confidence"
               />
             </div>
           </div>
@@ -87,7 +87,7 @@
                 name="estimated_value"
                 id="estimated_value"
                 class="input"
-                v-model="estimated_value"
+                v-model="lead.estimated_value"
               />
             </div>
           </div>
@@ -95,7 +95,7 @@
             <label for="status">Status</label>
             <div class="control">
               <div class="select">
-                <select name="status" id="status" v-model="status">
+                <select name="status" id="status" v-model="lead.status">
                   <option value="new">New</option>
                   <option value="contacted">Contacted</option>
                   <option value="inprogress">In progress</option>
@@ -109,7 +109,7 @@
             <label for="priority">Priority</label>
             <div class="control">
               <div class="select">
-                <select name="priority" id="priority" v-model="priority">
+                <select name="priority" id="priority" v-model="lead.priority">
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
                   <option value="high">High</option>
@@ -124,7 +124,7 @@
 
           <div class="field">
             <div class="control">
-              <button class="button is-success">Submit</button>
+              <button class="button is-success">Update</button>
             </div>
           </div>
         </form>
@@ -139,58 +139,57 @@ import axios from 'axios'
 import { toast } from 'bulma-toast'
 
 export default {
-  name: 'AddLead',
+  name: 'EditLead',
   data() {
     return {
-      company: '',
-      contact_person: '',
-      email: '',
-      phone: '',
-      website: '',
-      confidence: 0,
-      estimated_value: 0,
-      status: 'new',
-      priority: 'medium',
+      lead: {},
       errors: [],
     }
   },
+  mounted() {
+    this.getLead()
+  },
   methods: {
+    async getLead() {
+      this.$store.commit('setIsLoading', true)
+
+      const leadID = this.$route.params.id
+
+      await axios
+        .get(`/api/v1/leads/${leadID}/`)
+        .then((response) => {
+          this.lead = response.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+      this.$store.commit('setIsLoading', false)
+    },
     async submitForm() {
       this.errors = []
 
-      if (this.company === '') {
+      if (this.lead.company === '') {
         this.errors.push('The company is missing')
       }
-      if (this.contact_person === '') {
+      if (this.lead.contact_person === '') {
         this.errors.push('The contact person is missing')
       }
-      if (this.email === '') {
+      if (this.lead.email === '') {
         this.errors.push('The email is missing')
       }
-      if (this.phone === '') {
+      if (this.lead.phone === '') {
         this.errors.push('The phone is missing')
       }
 
       if (!this.errors.length) {
         this.$store.commit('setIsLoading', true)
 
-        const lead = {
-          company: this.company,
-          contact_person: this.contact_person,
-          email: this.email,
-          phone: this.phone,
-          website: this.website,
-          estimated_value: this.estimated_value,
-          confidence: this.confidence,
-          status: this.status,
-          priority: this.priority,
-        }
-
         await axios
-          .post('/api/v1/leads/', lead)
+          .patch(`/api/v1/leads/${this.lead.id}/`, this.lead)
           .then((response) => {
             toast({
-              message: 'The lead was added',
+              message: 'The lead was updated',
               type: 'is-success',
               dismissible: true,
               pauseOnHover: true,
@@ -198,7 +197,7 @@ export default {
               position: 'bottom-right',
             })
 
-            this.$router.push('/dashboard/leads')
+            this.$router.push(`/dashboard/leads/${this.lead.id}`)
           })
           .catch((error) => {
             console.log(error)
