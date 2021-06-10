@@ -82,8 +82,6 @@ export default {
           axios.defaults.headers.common['Authorization'] = 'Token ' + token
 
           localStorage.setItem('token', token)
-
-          this.$router.push('/dashboard/my-account')
         })
         .catch((error) => {
           if (error.response) {
@@ -94,6 +92,23 @@ export default {
           } else if (error.message) {
             this.errors.push('Something went wrong. Please try again!')
           }
+        })
+
+      await axios
+        .get('/api/v1/users/me')
+        .then((response) => {
+          this.$store.commit('setUser', {
+            id: response.data.id,
+            username: response.data.username,
+          })
+
+          localStorage.setItem('username', response.data.username)
+          localStorage.setItem('userid', response.data.id)
+
+          this.$router.push('/dashboard/my-account')
+        })
+        .catch((error) => {
+          console.log(error)
         })
 
       this.$store.commit('setIsLoading', false)
