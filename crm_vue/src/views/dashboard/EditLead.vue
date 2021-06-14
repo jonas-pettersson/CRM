@@ -118,6 +118,28 @@
             </div>
           </div>
 
+          <div class="field">
+            <label for="priority">Assigned to</label>
+            <div class="control">
+              <div class="select">
+                <select
+                  name="priority"
+                  id="priority"
+                  v-model="lead.assigned_to"
+                >
+                  <option value="" selected>Select member</option>
+                  <option
+                    v-for="member in team.members"
+                    :key="member.id"
+                    :value="member.id"
+                  >
+                    {{ member.username }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <div class="notification is-danger" v-if="errors.length">
             <p v-for="error in errors" :key="error">{{ error }}</p>
           </div>
@@ -143,11 +165,15 @@ export default {
   data() {
     return {
       lead: {},
+      team: {
+        members: [],
+      },
       errors: [],
     }
   },
   mounted() {
     this.getLead()
+    this.getTeam()
   },
   methods: {
     async getLead() {
@@ -159,6 +185,20 @@ export default {
         .get(`/api/v1/leads/${leadID}/`)
         .then((response) => {
           this.lead = response.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+      this.$store.commit('setIsLoading', false)
+    },
+    async getTeam() {
+      this.$store.commit('setIsLoading', true)
+
+      await axios
+        .get(`/api/v1/teams/get_my_team/`)
+        .then((response) => {
+          this.team = response.data
         })
         .catch((error) => {
           console.log(error)
