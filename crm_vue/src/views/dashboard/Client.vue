@@ -4,11 +4,11 @@
       <div class="column is-12">
         <h1 class="title">{{ client.name }}</h1>
 
-        <!-- <router-link
+        <router-link
           :to="{ name: 'EditClient', params: { id: client.id } }"
           class="button is-light"
           >Edit</router-link
-        > -->
+        >
       </div>
 
       <div class="column is-6">

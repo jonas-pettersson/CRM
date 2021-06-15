@@ -80,7 +80,7 @@
             </div>
           </div>
           <div class="field">
-            <label for="estimated_value">Confidence</label>
+            <label for="estimated_value">Estimated value</label>
             <div class="control">
               <input
                 type="number"
