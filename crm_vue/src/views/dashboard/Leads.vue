@@ -4,7 +4,9 @@
       <div class="column is-12">
         <h1 class="title">Leads</h1>
 
-        <router-link to="/dashboard/leads/add">Add lead</router-link>
+        <router-link to="/dashboard/leads/add" class="button is-primary"
+          >Add lead</router-link
+        >
       </div>
 
       <div class="column is-12">
@@ -56,7 +58,7 @@ export default {
     async getLeads() {
       this.$store.commit('setIsLoading', true)
 
-      axios
+      await axios
         .get('/api/v1/leads/')
         .then((response) => {
           this.leads = response.data
