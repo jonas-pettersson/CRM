@@ -30,6 +30,15 @@
           <p><strong>Website: </strong>{{ client.website }}</p>
         </div>
       </div>
+
+      <hr />
+
+      <div class="column is-12">
+        <h2 class="subtitle">Notes</h2>
+        <router-link :to="{ name: 'AddNote', params: { id: client.id } }"
+          >Add note</router-link
+        >
+      </div>
     </div>
   </div>
 </template>

@@ -104,7 +104,7 @@ export default {
     async submitForm() {
       this.errors = []
 
-      if (this.company === '') {
+      if (this.name === '') {
         this.errors.push('The name is missing')
       }
       if (this.contact_person === '') {

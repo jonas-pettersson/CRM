@@ -17,6 +17,7 @@ import Clients from '../views/dashboard/Clients.vue'
 import AddClient from '../views/dashboard/AddClient.vue'
 import Client from '../views/dashboard/Client.vue'
 import EditClient from '../views/dashboard/EditClient.vue'
+import AddNote from '../views/dashboard/AddNote.vue'
 
 const routes = [
   {
@@ -143,6 +144,14 @@ const routes = [
     path: '/dashboard/clients/:id/edit',
     name: 'EditClient',
     component: EditClient,
+    meta: {
+      requireLogin: true
+    }
+  },
+  {
+    path: '/dashboard/clients/:id/add-note',
+    name: 'AddNote',
+    component: AddNote,
     meta: {
       requireLogin: true
     }
